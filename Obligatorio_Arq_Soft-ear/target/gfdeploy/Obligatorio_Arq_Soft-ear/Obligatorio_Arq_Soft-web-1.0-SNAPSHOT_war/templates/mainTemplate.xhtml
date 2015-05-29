@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:composition template="/templates/foundation/master.xhtml">
+        <ui:define name="menu">
+            <hr />
+            <h:form>
+                <p:menubar autoDisplay="false">  
+                    <p:submenu label="Testing" icon="ui-icon-gear">
+                        <p:menuitem value="Load default data" icon="ui-icon-disk" url="/private/test/addData.xhtml" />
+                        <p:menuitem value="Send Push Test" icon="ui-icon-disk" url="/private/test/testPushData.xhtml" />
+                        <p:submenu label="REST Resources">
+                            <p:menuitem value="Alertas"  outcome="/private/test/restTest.xhtml?restUrl=alerta" icon="ui-icon ui-icon-arrowthick-1-se"/>
+                            <p:menuitem value="Equipos"  outcome="/private/test/restTest.xhtml?restUrl=equipo" icon="ui-icon ui-icon-arrowthick-1-se"/>
+                            <p:menuitem value="Paises"  outcome="/private/test/restTest.xhtml?restUrl=pais" icon="ui-icon ui-icon-arrowthick-1-se"/>
+                            <p:menuitem value="Partidos"  outcome="/private/test/restTest.xhtml?restUrl=partido" icon="ui-icon ui-icon-arrowthick-1-se"/>
+                        </p:submenu>                       
+                    </p:submenu>  
+                    <p:submenu label="Canf. Sistema">
+                        <p:menuitem value="Usuarios " outcome="/private/views/usuarios/index" />
+                        <p:menuitem value="Alerta" outcome="/private/views/alerta/index" />
+                        <p:menuitem value="Usuario Backend" outcome="/private/views/usuarioBackend/index" />
+                    </p:submenu>
+                    <p:submenu label="Canf. Basica">
+                        <p:menuitem value="Pais" outcome="/private/views/pais/index" />
+                        <p:menuitem value="Equipo" outcome="/private/views/equipo/index" /> 
+
+                    </p:submenu>
+                    <p:submenu label="Campeonatos">
+                        <p:menuitem value="Campeonato" outcome="/private/views/campeonato/index" />
+                        <p:menuitem value="Fechas de Campeonatos" outcome="/private/views/fechas/index" />
+                        <p:menuitem value="Partidos por Fecha" outcome="/private/views/partidosFechas/index" />
+                    </p:submenu>
+                    <p:submenu label="Resultados">
+                        <p:menuitem value="Resultados Partidos" outcome="/private/views/partido/index" />
+                    </p:submenu>
+                    <p:submenu label="Apuestas">
+                        <p:menuitem value="Apuestas Bloqueadas" outcome="/private/views/apuesta/ListFinalizada" />
+                        <p:menuitem value="Apuestas Data" outcome="/private/views/apuesta/index" />                            
+                    </p:submenu>
+                    <p:submenu label="Push Data">
+                        <p:menuitem value="Push Data" outcome="/private/views/pushNotification/index" />
+                    </p:submenu>
+                    <f:facet name="options">            
+                        <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{login.logout()}"/>  
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+            <hr />
+        </ui:define>
+    </ui:composition>
+</html>

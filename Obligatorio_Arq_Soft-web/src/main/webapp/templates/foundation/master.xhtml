@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <f:view contentType="text/html" >
+        <h:head>
+            <title><ui:insert name="title">_==-Obligatorio Arq Soft-==_</ui:insert></title>
+            <f:facet name="first">
+                <meta name="viewport" content="width=device-width" />
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <meta http-equiv="pragma" content="no-cache"/>
+                <meta http-equiv="cache-control" content="no-cache"/>
+                <meta http-equiv="expires" content="0"/>
+            </f:facet>        
+            <h:outputStylesheet library="foundation" name="css/foundation.min.css"/>
+            <h:outputStylesheet library="css" name="general-styles.css"/>
+            <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+            <h:outputScript library="foundation" name="js/foundation.min.js"/>
+            <h:outputScript library="scripts" name="pfcrud.js"/>
+            <ui:insert name="head"/>   
+        </h:head>
+        <h:body>       
+
+            <p:ajaxStatus onstart="statusDialog.show()" onsuccess="statusDialog.hide()" />
+
+            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                <h:graphicImage library="image" name="ajaxloadingbar.gif"/>                    
+            </p:dialog> 
+
+
+            <p:growl id="growl" life="3000"/>        
+            <div class="row">
+                <div class="large-12 columns">
+                    <ui:insert name="headerTitle">
+                        <span class="title-h3">Bienvenidos</span>
+                        <span class="subtitle-h3">Federico Cabrera(XXXXX), Rodrigo Bermudez(135417)</span>              
+                    </ui:insert>
+                    <ui:insert name="menu"/>
+                </div>
+            </div> 
+            <h:form prependId="false">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <ui:insert name="content"/>
+                    </div>
+                </div>            
+            </h:form>     
+            <div class="row">
+                <div class="large-12 columns">
+                    <ui:insert name="body"/>
+                </div>
+            </div>      
+            <ui:insert name="resources-app"/>
+        </h:body>
+    </f:view>
+</html>
