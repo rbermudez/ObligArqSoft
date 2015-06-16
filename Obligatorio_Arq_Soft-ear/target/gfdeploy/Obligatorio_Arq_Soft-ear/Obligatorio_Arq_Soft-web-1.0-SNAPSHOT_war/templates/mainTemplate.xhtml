@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/foundation/master.xhtml">
+        <ui:define name="menu">
+            <hr />
+            <h:form>
+                <p:menubar>  
+                    <p:submenu label="Configuration" icon="ui-icon-gear">
+                        <p:menuitem value="Users" icon="ui-icon-person" url="/private/config/users/users.xhtml" />
+                        <p:menuitem value="Alerts"  icon="ui-icon ui-icon-alert" url="/private/config/alerts/alerts.xhtml"/>
+                        <p:menuitem value="System Config"  icon="ui-icon ui-icon-wrench" url="/private/config/system/systemConfig.xhtml"/>
+                    </p:submenu>  
+                    <p:submenu label="Laboratorio" icon="ui-icon-document">
+                        <p:menuitem value="Input Samples" icon="ui-icon-document" url="/private/lab/sampleInfo.xhtml" />                       
+                    </p:submenu>
+                    <p:submenu label="Graficos" icon="ui-icon-signal" >
+                        <p:menuitem value="Biweekly evolution" icon="ui-icon-signal" url="/private/graph/evolutionBiweekly.xhtml" style="width: 200px;"/>  
+                        <p:menuitem value="Bacterial Count" icon="ui-icon-signal" url="/private/graph/bacterialCount.xhtml" />                       
+                    </p:submenu>
+                    <p:submenu label="Reportes" icon="ui-icon-clipboard">
+                        <p:menuitem value="Alertas emitidas" icon="ui-icon-alert" url="/private/reports/alerts.xhtml" />                       
+                    </p:submenu>
+                    <f:facet name="options">  
+                       
+                        <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{login.logout()}"/>  
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+            <hr />
+        </ui:define>
+    </ui:composition>    
+</html>
