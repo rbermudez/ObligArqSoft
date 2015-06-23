@@ -3,7 +3,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
     <ui:composition template="/templates/foundation/master.xhtml">
         <ui:define name="menu">
             <hr />
@@ -32,6 +34,8 @@
                         <p:menuitem value="Alerts issued" icon="ui-icon-alert" url="/private/reports/alerts.xhtml" />                       
                     </p:submenu>
                     <f:facet name="options">  
+
+                
                         <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{login.logout()}"/>  
                     </f:facet>
                 </p:menubar>

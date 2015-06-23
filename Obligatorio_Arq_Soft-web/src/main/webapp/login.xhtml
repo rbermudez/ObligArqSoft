@@ -3,7 +3,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
     <ui:composition template="/templates/foundation/master.xhtml">
         <ui:define name="content">
             <div class="row">
@@ -21,6 +22,11 @@
                         <p:commandButton value="Login Gmail" action="#{login.loginOAuth()}" update="loginPanel" process="@this"/>  
                         <p:messages globalOnly="true" autoUpdate="true"/>
                         <p:commandButton value="Create" action="#{login.createUser()}" update="loginPanel" rendered="#{login.existeUsuario()}"/> 
+                        <p:commandButton value="Login" action="#{login.login()}" update="loginPanel"/>                        
+                        <p:messages globalOnly="true" autoUpdate="true"/>
+                        <p:commandButton value="Create" action="#{login.createUser()}" update="loginPanel" rendered="#{login.existeUsuario()}"/> 
+                        <p:commandButton value="TEST1" action="#{login.testMethod1()}" update="loginPanel" rendered="false"/> 
+                        <p:commandButton value="TEST2" action="#{login.testMethod2()}" update="loginPanel" rendered="false"/> 
                     </p:panel>
                 </div>
                 <div class="large-4 columns">
