@@ -6,12 +6,10 @@
 package com.ort.arqsoft.ui.utils;
 
 import com.ort.arqsoft.security.EnumRole;
-import com.ort.arqsoft.security.Login;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -21,12 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 @FacesConverter(forClass = ItemMenu.class, value = "itemConverter")
 public class ItemConverter implements Converter {
 
-    private Logger LOG = Logger.getLogger(Login.class.getName());
-
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (StringUtils.isNotEmpty(value)) {
-            Object ob = value;
             ItemMenu item = new ItemMenu();
             item.setName(value);
             item.setPathImage(value);

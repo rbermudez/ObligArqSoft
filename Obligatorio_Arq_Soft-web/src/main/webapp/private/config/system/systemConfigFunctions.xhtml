@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/mainTemplate.xhtml">
+        <ui:define name="content" >
+            <p:panel id="panel" header="System Config Functions">                    
+                <p:dataTable id="tblFunctions"  var="function" value="#{systemConfigController.functions}" paginator="true" rows="10" rowKey="#{function.id}" 
+                             selection="#{systemConfigController.selectedFunction}" selectionMode="single" paginatorPosition="bottom" emptyMessage="No data found"  
+                             scrollable="true" scrollHeight="251"  style="width: 100%"  >
+                    <p:ajax event="rowSelect" update="tblFunctions" global="false"/>    
+                    <f:facet name="header">
+                        <h:outputText value="Functions" />
+                    </f:facet>
+
+                    <p:column sortBy="#{function.id}" headerText="Id">
+                        <h:outputText value="#{function.id}"/>
+                    </p:column>
+
+                    <p:column  sortBy="#{function.name}" headerText="Name" >
+                        <h:outputText value="#{function.name}"/>
+                    </p:column>
+
+                    <p:column  sortBy="#{function.description}" headerText="Description" >
+                        <h:outputText value="#{function.description}"/>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <h:panelGroup layout="block" style="text-align:left;">
+                            <p:commandButton   icon="ui-icon-plus" title="Add" oncomplete="PF('dialogAddFunction').show()" update="panelAddFunction" actionListener="#{systemConfigController.initFunction()}" process="@this"> 
+                                <p:resetInput target="panelAddFunction" />
+                            </p:commandButton>
+                            <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="PF('dialogAddFunction').show()"  update="panelAddFunction" actionListener="#{systemConfigController.setFunctionUpdateMode()}" process="@this" disabled="#{empty systemConfigController.selectedFunction}" > 
+                                <p:resetInput target="panelAddFunction" />
+                            </p:commandButton>
+                            <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="PF('dialogDeleteFunction').show()" disabled="#{empty systemConfigController.selectedFunction}" process="@this"/> 
+                        </h:panelGroup>
+                    </f:facet>  
+                </p:dataTable>
+            </p:panel>  
+            <p:dialog  header="Add Function" widgetVar="dialogAddFunction" showEffect="slide" modal="true" resizable="false" width="400" >
+                <h:panelGrid id="panelAddFunction" columns="2" style="width: 100%;">
+                    <p:outputLabel value="Name:" for="nameFunction" />
+                    <p:inputText id="nameFunction" style="width: 100%;" value="#{systemConfigController.name}" required="true"/>
+                    <p:outputLabel value="Function:" for="descriptionFunction"  />
+                    <p:inputTextarea id="descriptionFunction" style="width: 100%;" value="#{systemConfigController.description}" required="true"/>
+                </h:panelGrid>
+                <p:spacer width="1" height="10"/>
+                <h:panelGroup layout="block" style="text-align:right;">
+                    <p:commandButton value="Add" actionListener="#{systemConfigController.saveFunction()}"  update="panelAddFunction tblFunctions" /> 
+                </h:panelGroup>
+            </p:dialog>
+            <p:dialog id="dialogDeleteFunction" header="Delete Function" widgetVar="dialogDeleteFunction" showEffect="slide" modal="true" resizable="false">
+                <h:panelGrid >
+                    <h:outputLabel  value="Are you sure?" />  
+                    <f:facet name="footer" >  
+                        <h:panelGroup layout="block" style="text-align:right;">
+                            <p:commandButton  value="Yes" actionListener="#{systemConfigController.deleteFunction()}" update="tblFunctions" process="@this"/>
+                            <p:commandButton  value="No" onstart="PF('dialogDeleteFunction').hide()" process="@this"/> 
+                        </h:panelGroup>
+                    </f:facet>     
+                </h:panelGrid> 
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>

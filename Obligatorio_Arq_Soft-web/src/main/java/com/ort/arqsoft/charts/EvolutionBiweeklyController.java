@@ -6,38 +6,35 @@ package com.ort.arqsoft.charts;
 
 
 import com.ort.arqsoft.entities.FunctionFx;
+import com.ort.arqsoft.entities.RolUsuario;
 import com.ort.arqsoft.entities.SampleData;
-import com.ort.arqsoft.entities.SampleLocation;
 import com.ort.arqsoft.entities.SampleType;
+import com.ort.arqsoft.entities.UsuarioBackend;
 import com.ort.arqsoft.entities.utils.JPAServiceLocal;
 import com.ort.arqsoft.entities.utils.QueryParameter;
 import com.ort.arqsoft.entities.utils.ScriptExecutor;
 import com.ort.arqsoft.exceptions.AlertCodes;
-import com.ort.arqsoft.exceptions.ErrorCodes;
+import com.ort.arqsoft.security.EnumRole;
 import com.ort.arqsoft.utils.EntityUtils;
 import com.ort.arqsoft.utils.JsfUtil;
 import com.ort.arqsoft.utils.ListUtils;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import javax.annotation.PostConstruct;
 import javax.script.ScriptException;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.chart.BarChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,25 +48,27 @@ public class EvolutionBiweeklyController implements Serializable {
     Logger logger = (Logger) LoggerFactory.getLogger(EvolutionBiweeklyController.class); 
     @EJB
     private JPAServiceLocal jpaService;
-    private CartesianChartModel categoryModel;
+    private BarChartModel categoryModel;
     private List<SampleData> samples;
     private List<FunctionFx> functions;
     private FunctionFx functionSampleType;
     private FunctionFx functionLocation;
-    private DualListModel<SampleLocation> locations;
+    private DualListModel<UsuarioBackend> producers;
     private DualListModel<SampleType> sampleTypes;
     private Date start;
     private Date end;
-    private SampleLocation selectedPickedLocation;
+    private UsuarioBackend selectedPickedLocation;
     private SampleType selectedPickedType;
     
 
     @PostConstruct
     public void init() {
-        List<SampleLocation> aux = jpaService.findAll(SampleLocation.class);
+       // List<SampleLocation> aux = jpaService.findAll(SampleLocation.class);
+        RolUsuario rol = jpaService.findOneWithNamedQuery(RolUsuario.class, "findRol", QueryParameter.with("role", EnumRole.PRODUCERS.name()).parameters());
+        List<UsuarioBackend> aux = jpaService.findWithNamedQuery(UsuarioBackend.class, "findProducers", QueryParameter.with("role", rol).parameters());
         int i = 0;
-        List<SampleLocation> sourceLocations = new ArrayList<SampleLocation>();
-        for (SampleLocation sampleLocation : aux) {
+        List<UsuarioBackend> sourceLocations = new ArrayList<>();
+        for (UsuarioBackend sampleLocation : aux) {
             if (i == 3) {
                 break;
             }
@@ -77,11 +76,11 @@ public class EvolutionBiweeklyController implements Serializable {
             sourceLocations.add(sampleLocation);
         }
 
-        List<SampleLocation> targetLocations = ListUtils.diferenceOfSecondList(sourceLocations, aux);
+        List<UsuarioBackend> targetLocations = ListUtils.diferenceOfSecondList(sourceLocations, aux);
         List<SampleType> sourceSampleTypes = jpaService.findAll(SampleType.class);
-        List<SampleType> targetSampleTypes = new ArrayList<SampleType>();
-        setLocations(new DualListModel<SampleLocation>(sourceLocations, targetLocations));
-        setSampleTypes(new DualListModel<SampleType>(sourceSampleTypes, targetSampleTypes));
+        List<SampleType> targetSampleTypes = new ArrayList<>();
+        setProducers(new DualListModel<>(sourceLocations, targetLocations));
+        setSampleTypes(new DualListModel<>(sourceSampleTypes, targetSampleTypes));
         setEnd(new Date());
         Calendar cal = Calendar.getInstance();
         cal.setTime(end);
@@ -91,19 +90,16 @@ public class EvolutionBiweeklyController implements Serializable {
         loadFunctions();
     }
 
-    public CartesianChartModel getCategoryModel() {
+    public BarChartModel getCategoryModel() {
         return categoryModel;
     }
 
     public void setSelectedPickedLocation() {
-
-        //JsfUtil.showDialog("dlg1");
         String hashValue = JsfUtil.getValueComponent("selectedPicked");
         if (hashValue.isEmpty()) {
             JsfUtil.addAlertMessage(AlertCodes.NOT_SELECTED_VALUE, "text.locations");
         } else {
-            selectedPickedLocation = EntityUtils.getAsObject(hashValue, SampleLocation.class);
-            System.out.println(selectedPickedLocation.getDescription());
+            selectedPickedLocation = EntityUtils.getAsObject(hashValue, UsuarioBackend.class);
             JsfUtil.showDialog("varAddFormule");
         }
     }
@@ -126,10 +122,10 @@ public class EvolutionBiweeklyController implements Serializable {
             loadFunctions();
         }
         for (FunctionFx function : functions) {
-            if(functionSampleType!=null && functionSampleType.getId()== function.getId()){
+            if(functionSampleType!=null && Objects.equals(functionSampleType.getId(), function.getId())){
                 functionSampleType=function;
             }
-            if(functionLocation!=null && functionLocation.getId()== function.getId()){
+            if(functionLocation!=null && Objects.equals(functionLocation.getId(), function.getId())){
                 functionLocation=function;
             }
         }
@@ -137,9 +133,9 @@ public class EvolutionBiweeklyController implements Serializable {
     
     public void createCategoryModel(){
        
-        /*ChartSeries generic;
-        categoryModel = new CartesianChartModel();
-        if (locations.getSource().isEmpty()) {
+        ChartSeries generic;
+        categoryModel = new BarChartModel();
+        if (producers.getSource().isEmpty()) {
             JsfUtil.addAlertMessage(AlertCodes.FILTER_NOT_EMPTY, "text.locations");
         } else if (sampleTypes.getSource().isEmpty()) {
             JsfUtil.addAlertMessage(AlertCodes.FILTER_NOT_EMPTY, "text.sampleTypes");
@@ -150,19 +146,19 @@ public class EvolutionBiweeklyController implements Serializable {
             Timestamp endTimeStamp = new Timestamp(end.getTime());
             Timestamp startTimeStamp = new Timestamp(start.getTime());
            
-            samples = jpaService.findWithNamedQuery(SampleData.class, "getSampleBiweekly", QueryParameter.with("start", startTimeStamp).and("end", endTimeStamp).and("types",sampleTypes.getSource()).and("locations", locations.getSource()).parameters());
-           
+            samples = jpaService.findWithNamedQuery(SampleData.class, "getSampleBiweekly", QueryParameter.with("start", startTimeStamp).and("end", endTimeStamp).and("types",sampleTypes.getSource()).and("producers", producers.getSource()).parameters());
+           //samples = new ArrayList<>();
             if (samples.size()>0){
                 generic = new ChartSeries();
                 SampleData sampleCompare = samples.get(0);
-                generic.setLabel(sampleCompare.getSample().getLocation().getDescription());
+                generic.setLabel(sampleCompare.getSample().getProducers().getUserName());
                 for (SampleData sampleData : samples) {
-                    if (sampleCompare.getSample().getLocation().equals(sampleData.getSample().getLocation())){
+                    if (sampleCompare.getSample().getProducers().equals(sampleData.getSample().getProducers())){
                         generic.set(sampleData.getType().getDescription(), new Double(sampleData.getValueData()));
                     }else{
                         categoryModel.addSeries(generic);
                         generic = new ChartSeries();
-                        generic.setLabel(sampleData.getSample().getLocation().getDescription());
+                        generic.setLabel(sampleData.getSample().getProducers().getUserName());
                         generic.set(sampleData.getType().getDescription(), new Double(sampleData.getValueData()));
                         sampleCompare=sampleData;
                         
@@ -175,10 +171,10 @@ public class EvolutionBiweeklyController implements Serializable {
         
         if (categoryModel.getSeries().isEmpty()) {
             generic = new ChartSeries();
-            generic.setLabel(JsfUtil.getMessage("text.noDataFound"));
-            generic.set(JsfUtil.getMessage("text.noDataFound"), 0);
+            generic.setLabel("Not data gound");
+            generic.set("Not data gound", 0);
             categoryModel.addSeries(generic);
-       }*/
+       }
         
     }
 
@@ -197,24 +193,24 @@ public class EvolutionBiweeklyController implements Serializable {
     }
     
 
-    private CartesianChartModel createCategoryModelWithFx(){
+    private BarChartModel createCategoryModelWithFx(){
         loadSelectedFunctions();
         ChartSeries generic;
-        categoryModel = new CartesianChartModel();
-       /* int count =0;
+        categoryModel = new BarChartModel();
+        int count =0;
         double val=0;
         try{
             Timestamp endTimeStamp = new Timestamp(end.getTime());
             Timestamp startTimeStamp = new Timestamp(start.getTime());
-            samples = jpaService.findWithNamedQuery(SampleData.class, "getSampleBiweekly", QueryParameter.with("start", startTimeStamp).and("end", endTimeStamp).and("types",sampleTypes.getSource()).and("locations", locations.getSource()).parameters());
+            samples = jpaService.findWithNamedQuery(SampleData.class, "getSampleBiweekly", QueryParameter.with("start", startTimeStamp).and("end", endTimeStamp).and("types",sampleTypes.getSource()).and("locations", producers.getSource()).parameters());
             if (samples.size()>0){
                 generic = new ChartSeries();
                 SampleData sampleCompare = samples.get(0);
                 SampleType typeCompare = sampleCompare.getType();
-                generic.setLabel(sampleCompare.getSample().getLocation().getDescription());
+                generic.setLabel(sampleCompare.getSample().getProducers().getUserName());
                 for (SampleData sampleData : samples) {
                     Object fxResult ="0";
-                    if (sampleCompare.getSample().getLocation().equals(sampleData.getSample().getLocation())){
+                    if (sampleCompare.getSample().getProducers().equals(sampleData.getSample().getProducers())){
                         if (!typeCompare.equals(sampleData.getType())){
                             val = (val*100)/count;
                             generic.set(typeCompare.getDescription(), val);
@@ -227,7 +223,7 @@ public class EvolutionBiweeklyController implements Serializable {
                         sampleCompare=sampleData;
                         categoryModel.addSeries(generic);
                         generic = new ChartSeries();
-                        generic.setLabel(sampleCompare.getSample().getLocation().getDescription());
+                        generic.setLabel(sampleCompare.getSample().getProducers().getUserName());
                         val=0;
                         count=0;
                     }
@@ -243,8 +239,8 @@ public class EvolutionBiweeklyController implements Serializable {
             }
         }catch(ScriptException ex){
             logger.debug(ex.getMessage());
-            JsfUtil.addErrorMessage(ErrorCodes.FUNCTION_IS_NOT_CORRECT, functionSampleType.getName());
-        }*/
+            JsfUtil.addErrorMessage("Error ene el script");
+        }
         return categoryModel;
     }
         
@@ -254,100 +250,58 @@ public class EvolutionBiweeklyController implements Serializable {
         return fxResult;
     }
 
-    
-    /**
-     * @return the jpaService
-     */
     public JPAServiceLocal getJpaService() {
         return jpaService;
     }
 
-    /**
-     * @param jpaService the jpaService to set
-     */
     public void setJpaService(JPAServiceLocal jpaService) {
         this.jpaService = jpaService;
     }
 
-    /**
-     * @return the samples
-     */
     public List<SampleData> getSamples() {
         return samples;
     }
 
-    /**
-     * @param samples the samples to set
-     */
     public void setSamples(List<SampleData> samples) {
         this.samples = samples;
     }
 
-    /**
-     * @return the locations
-     */
-    public DualListModel<SampleLocation> getLocations() {
-        return locations;
+    public DualListModel<UsuarioBackend> getProducers() {
+        return producers;
     }
 
-    /**
-     * @param locations the locations to set
-     */
-    public void setLocations(DualListModel<SampleLocation> locations) {
-        this.locations = locations;
+    public void setProducers(DualListModel<UsuarioBackend> producers) {
+        this.producers = producers;
     }
 
-    /**
-     * @return the sampleTypes
-     */
     public DualListModel<SampleType> getSampleTypes() {
         return sampleTypes;
     }
 
-    /**
-     * @param sampleTypes the sampleTypes to set
-     */
     public void setSampleTypes(DualListModel<SampleType> sampleTypes) {
         this.sampleTypes = sampleTypes;
     }
 
-    /**
-     * @return the start
-     */
     public Date getStart() {
         return start;
     }
 
-    /**
-     * @param start the start to set
-     */
     public void setStart(Date start) {
         this.start = start;
     }
 
-    /**
-     * @return the end
-     */
     public Date getEnd() {
         return end;
     }
 
-    /**
-     * @param end the end to set
-     */
     public void setEnd(Date end) {
         this.end = end;
     }
-    /**
-     * @return the functions
-     */
+
     public List<FunctionFx> getFunctions() {
         return functions;
     }
 
-    /**
-     * @param functions the functions to set
-     */
     public void setFunctions(List<FunctionFx> functions) {
         this.functions = functions;
     }
@@ -356,36 +310,19 @@ public class EvolutionBiweeklyController implements Serializable {
         functions = jpaService.findAll(FunctionFx.class);
     }
 
-    /**
-     * @return the functionSampleType
-     */
     public FunctionFx getFunctionSampleType() {
         return functionSampleType;
     }
 
-    /**
-     * @param functionSampleType the functionSampleType to set
-     */
     public void setFunctionSampleType(FunctionFx functionSampleType) {
         this.functionSampleType = functionSampleType;
     }
 
-    /**
-     * @return the functionLocation
-     */
     public FunctionFx getFunctionLocation() {
         return functionLocation;
     }
 
-    /**
-     * @param functionLocation the functionLocation to set
-     */
     public void setFunctionLocation(FunctionFx functionLocation) {
         this.functionLocation = functionLocation;
-    }
-
-    public void proof() {
-       
-      
     }
 }

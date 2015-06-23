@@ -14,6 +14,14 @@ public class ItemMenu {
     private String name;
     private String pathImage;
     private Enum value;
+    
+    public ItemMenu(String name){
+        this.name = name;
+    }
+    
+    public ItemMenu(){
+       
+    }
 
     public String getName() {
         return name;

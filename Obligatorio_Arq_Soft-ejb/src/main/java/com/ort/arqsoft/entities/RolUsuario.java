@@ -9,9 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import com.ort.arqsoft.entities.interfaces.EntityInterface;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 
 @Entity
+@NamedQueries({ @NamedQuery(name = "findRol", query = "SELECT a FROM RolUsuario a WHERE a.nombreRol = :role")})
 public class RolUsuario extends EntityInterface implements Serializable{
     
     private static final long serialVersionUID = 1L;

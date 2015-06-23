@@ -3,7 +3,6 @@ com\ort\arqsoft\exceptions\ExceptionCodes.class
 com\ort\arqsoft\security\EnumRole.class
 com\ort\arqsoft\entities\utils\JPAService.class
 com\ort\arqsoft\exceptions\AsapException.class
-com\ort\arqsoft\entities\SampleLocation.class
 com\ort\arqsoft\exceptions\ErrorCodes.class
 com\ort\arqsoft\entities\utils\QueryParameter.class
 com\ort\arqsoft\entities\interfaces\EntityInterface.class
@@ -11,8 +10,8 @@ com\ort\arqsoft\entities\SampleData.class
 com\ort\arqsoft\security\Secured.class
 com\ort\arqsoft\entities\RolUsuario.class
 com\ort\arqsoft\exceptions\SuccessCodes.class
-com\ort\arqsoft\entities\FunctionFx.class
 com\ort\arqsoft\security\SecurityInterceptor.class
+com\ort\arqsoft\entities\FunctionFx.class
 com\ort\arqsoft\entities\UsuarioBackend.class
 com\ort\arqsoft\security\JPARealmImpl$PasswdSalt.class
 com\ort\arqsoft\entities\SampleType.class

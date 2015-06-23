@@ -4,174 +4,175 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions" >
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="content" >
             <p:panel header="Samples Input Data">  
-                <h:form id="formPrincipal">  
-                    <h:panelGrid columns="3" >
-                        <p:dataTable id="tblSamples"  var="sample" value="#{sampleInfoController.samples}" paginator="true" rows="12" rowKey="#{sample.id}" 
-                                     selection="#{sampleInfoController.selectedSample}" selectionMode="single" paginatorPosition="bottom" emptyMessage="No data found"  
-                                     scrollable="true" scrollHeight="251"   style="width: 700px;" filteredValue="#{sampleInfoController.samplesFiltered}"  >
-                            <p:ajax event="rowSelect" listener="#{sampleInfoController.onRowSelectSample()}" update=":formPrincipal:tblSamples :formPrincipal:tblSamplesDetail"  />   
-                            <f:facet name="header">
-                                <h:panelGroup layout="block" style="text-align:left;">
-                                    <h:outputText value="Samples" />
-                                </h:panelGroup>
-                            </f:facet>
-                            
-                            <p:column filterBy="#{sample.id}"  filterMatchMode="contains" sortBy="#{sample.id}" headerText="id" rendered="false">
-                                <h:outputText value="#{sample.id}"/>
+
+                <h:panelGrid columns="3" >
+                    <p:dataTable id="tblSamples"  var="sample" value="#{sampleInfoController.samples}" paginator="true" rows="12" rowKey="#{sample.id}" 
+                                 selection="#{sampleInfoController.selectedSample}" selectionMode="single" paginatorPosition="bottom" emptyMessage="No data found"  
+                                 scrollable="true" scrollHeight="251"   style="width: 700px;" filteredValue="#{sampleInfoController.samplesFiltered}"  >
+                        <p:ajax event="rowSelect" listener="#{sampleInfoController.onRowSelectSample()}" update="tblSamples tblSamplesDetail"  />   
+                        <f:facet name="header">
+                            <h:panelGroup layout="block" style="text-align:left;">
+                                <h:outputText value="Samples" />
+                            </h:panelGroup>
+                        </f:facet>
+
+                        <p:column filterBy="#{sample.id}"  filterMatchMode="contains" sortBy="#{sample.id}" headerText="id" rendered="false">
+                            <h:outputText value="#{sample.id}"/>
+                        </p:column>
+
+                        <p:column filterBy="#{sample.inputDate}"  style="width: 13%;" filterMatchMode="contains" sortBy="#{sample.inputDate}" headerText="Date" >
+                            <h:outputText value="#{sample.inputDate}" >
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column filterBy="#{sample.silo}"  style="width: 15%;" filterMatchMode="contains" sortBy="#{sample.silo}" headerText="Silo" >
+                            <h:outputText value="#{sample.silo}"/>
+                        </p:column>
+
+                        <p:column filterBy="#{sample.lote}"  style="width: 13%;" filterMatchMode="contains" sortBy="#{sample.lote}" headerText="Lote" >
+                            <h:outputText value="#{sample.lote}"/>
+                        </p:column>
+
+                        <p:column filterBy="#{sample.tanque}" style="width: 13%;" filterMatchMode="contains" sortBy="#{sample.tanque}" headerText="Nro Tanque" >
+                            <h:outputText value="#{sample.tanque}"/>
+                        </p:column>
+                        
+                        <p:column filterBy="#{sample.producers.userName}" style="width: 25%;" filterMatchMode="contains" sortBy="#{sample.producers.userName}" headerText="Producer" >
+                            <h:outputText value="#{sample.producers.userName}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <h:panelGroup layout="block" style="text-align:left;">
+                                <p:commandButton   icon="ui-icon-plus" title="Add" actionListener="#{sampleInfoController.initSelectedSample}"  oncomplete="PF('dialogSample').show()" update="updatePanel"   process="@this"/> 
+                                <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="PF('dialogSample').show()" actionListener="#{sampleInfoController.setUpdateMode(true)}" update="updatePanel" disabled="#{empty sampleInfoController.selectedSample}"  process="@this"/> 
+                                <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="PF('dialogDeleteSample').show()" disabled="#{empty sampleInfoController.selectedSample}" process="@this" /> 
+                            </h:panelGroup>
+                        </f:facet>  
+                    </p:dataTable>
+                    <p:spacer width="20"/>
+                    <p:dataTable id="tblSamplesDetail"  var="detail" value="#{sampleInfoController.selectedSample.details}" paginator="true" rows="10" rowKey="#{detail.id}" 
+                                 selection="#{sampleInfoController.selectedSampleData}" selectionMode="single" paginatorPosition="bottom" emptyMessage="No data found"  
+                                 scrollable="true" scrollHeight="251"    filteredValue="#{sampleInfoController.samplesDataFiltered}"  >
+                        <p:ajax event="rowSelect"  update="tblSamplesDetail"  />   
+                        <f:facet name="header">
+                            <h:panelGroup layout="block" style="text-align:left;">
+                                <h:outputText value="Samples Detail" />
+                            </h:panelGroup>
+                        </f:facet>
+
+                        <p:column filterBy="#{detail.type.description}"  filterMatchMode="contains" sortBy="#{detail.type.description}" headerText="Type" >
+                            <h:outputText value="#{detail.type.description}"/>
+                        </p:column>
+
+                        <p:column filterBy="#{detail.valueData}"   filterMatchMode="contains" sortBy="#{detail.valueData}" headerText="Value" >
+                            <h:outputText value="#{detail.valueData}"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <h:panelGroup layout="block" style="text-align:left;">
+                                <p:commandButton   icon="ui-icon-plus" title="Add" actionListener="#{sampleInfoController.initSelectedData}"  oncomplete="PF('dialogAddSampleDetail').show()" update="updatePanelData updatePanel" disabled="#{empty sampleInfoController.selectedSample}" process="@this"  /> 
+                                <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="PF('dialogAddSampleDetail').show()" actionListener="#{sampleInfoController.setUpdateMode(true)}" update="updatePanelData updatePanel" disabled="#{empty sampleInfoController.selectedSampleData}" process="@this" /> 
+                                <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="PF('dialogDeleteSampleDetail').show()" disabled="#{empty sampleInfoController.selectedSampleData}" process="@this"/> 
+                            </h:panelGroup>
+                        </f:facet>  
+                    </p:dataTable>
+
+                </h:panelGrid>
+            </p:panel>
+            <p:dialog id="dialog" header="Add Sample" widgetVar="dialogSample" showEffect="slide" modal="true" resizable="false" >
+                <p:panel id="updatePanel">
+
+                    <h:panelGrid  columns="2">
+                        
+                         <h:outputLabel for="producer" value="Producer:" />
+                        <p:selectOneMenu id="producer" value="#{sampleInfoController.selectedProducer}"  required="true" label="Producer">
+                            <f:selectItem itemLabel="Select One" itemValue=""  />
+                            <f:selectItems value="#{sampleInfoController.producers}" var="producer" itemLabel="#{producer}" itemValue="#{producer}"  />
+                            <p:column>
+                                #{producer}  
                             </p:column>
-                            
-                            <p:column filterBy="#{sample.inputDate}"  style="width: 20%;" filterMatchMode="contains" sortBy="#{sample.inputDate}" headerText="Date" >
-                                <h:outputText value="#{sample.inputDate}"/>
-                            </p:column>
-                            
-                            <p:column filterBy="#{sample.silo}"  style="width: 15%;" filterMatchMode="contains" sortBy="#{sample.silo}" headerText="Silo" >
-                                <h:outputText value="#{sample.silo}"/>
-                            </p:column>
-
-                            <p:column filterBy="#{sample.lote}"  style="width: 15%;" filterMatchMode="contains" sortBy="#{sample.lote}" headerText="Lote" >
-                                <h:outputText value="#{sample.lote}"/>
-                            </p:column>
-
-                            <p:column filterBy="#{sample.tanque}" style="width: 15%;" filterMatchMode="contains" sortBy="#{sample.tanque}" headerText="Nro Tanque" >
-                                <h:outputText value="#{sample.tanque}"/>
-                            </p:column>
-
-                            <p:column filterBy="#{sample.location.description}"  filterMatchMode="contains" sortBy="#{sample.location.description}" headerText="Location" >
-                                <h:outputText value="#{sample.location.description}"/>
-                            </p:column>
-
-                         
-
-                            <f:facet name="footer">
-                                <h:panelGroup layout="block" style="text-align:left;">
-                                    <p:commandButton   icon="ui-icon-plus" title="Add" actionListener="#{sampleInfoController.initSelectedSample}"  oncomplete="PF('dialogSample').show()" update=":formDialog:updatePanel"  /> 
-                                    <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="PF('dialogSample').show()" actionListener="#{sampleInfoController.setUpdateMode(true)}" update=":formDialog:updatePanel" disabled="#{empty sampleInfoController.selectedSample}" /> 
-                                    <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="varDeleteSample.show()" disabled="#{empty sampleInfoController.selectedSample}" /> 
-                                </h:panelGroup>
-                            </f:facet>  
-                        </p:dataTable>
-                        <p:spacer width="20"/>
-                        <p:dataTable id="tblSamplesDetail"  var="detail" value="#{sampleInfoController.selectedSample.details}" paginator="true" rows="10" rowKey="#{detail.id}" 
-                                     selection="#{sampleInfoController.selectedSampleData}" selectionMode="single" paginatorPosition="bottom" emptyMessage="No data found"  
-                                     scrollable="true" scrollHeight="251"    filteredValue="#{sampleInfoController.samplesDataFiltered}"  >
-                            <p:ajax event="rowSelect"  update=":formPrincipal:tblSamplesDetail"  />   
-                            <f:facet name="header">
-                                <h:panelGroup layout="block" style="text-align:left;">
-                                    <h:outputText value="Samples Detail" />
-                                </h:panelGroup>
-                            </f:facet>
-
-                            <p:column filterBy="#{detail.type.description}"  filterMatchMode="contains" sortBy="#{detail.type.description}" headerText="Type" >
-                                <h:outputText value="#{detail.type.description}"/>
-                            </p:column>
-
-                            <p:column filterBy="#{detail.valueData}"   filterMatchMode="contains" sortBy="#{detail.valueData}" headerText="Value" >
-                                <h:outputText value="#{detail.valueData}"/>
-                            </p:column>
-
-                            <f:facet name="footer">
-                                <h:panelGroup layout="block" style="text-align:left;">
-                                    <p:commandButton   icon="ui-icon-plus" title="Add" actionListener="#{sampleInfoController.initSelectedData}"  oncomplete="varAddSampleDetail.show()" update=":formDialogData:updatePanelData" disabled="#{empty sampleInfoController.selectedSample}"  /> 
-                                    <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="varAddSampleDetail.show()" actionListener="#{sampleInfoController.setUpdateMode(true)}" update=":formDialogData:updatePanelData" disabled="#{empty sampleInfoController.selectedSampleData}" /> 
-                                    <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="varDeleteSampleDetail.show()" disabled="#{empty sampleInfoController.selectedSampleData}" /> 
-                                </h:panelGroup>
-                            </f:facet>  
-                        </p:dataTable>
-
-                    </h:panelGrid>
-                </h:form>
-
-            </p:panel>  
-            <p:dialog id="dialog" header="Add Sample" widgetVar="dialogSample" modal="true" resizable="false" >
-                <h:form id="formDialog"> 
-
-                    <h:panelGrid id="updatePanel" columns="2">
+                        </p:selectOneMenu>
+                       
 
                         <h:outputLabel for="lote" value="Lote: *" />  
-                        <p:inputText id="lote" value="#{sampleInfoController.selectedSample.lote}" required="true" label="lote" />  
-
+                        <p:inputText  id="lote" value="#{sampleInfoController.selectedSample.lote}"  maxlength="9" required="true" label="lote" />
+ 
                         <h:outputLabel for="nroSilo" value="Silo: *" />  
                         <p:inputText id="nroSilo" value="#{sampleInfoController.selectedSample.silo}" required="true" label="nroSilo"/> 
                         
+
                         <h:outputLabel for="nroTanque" value="Nro Tanque: *" />  
-                        <p:inputText id="nroTanque" value="#{sampleInfoController.selectedSample.tanque}" required="true" label="nroTanque"/> 
-
-
-                        <h:outputLabel for="location" value="Location: *" />  
-                        <p:selectCheckboxMenu value="#{sampleInfoController.selectedLocations}" label="location" panelStyle="width:220px" converter="entityConverter" rendered="#{sampleInfoController.updateMode eq false}" >  
-                            <f:selectItems value="#{sampleInfoController.locations}" var="location" itemLabel="#{location.description}" itemValue="#{location}" />  
-                        </p:selectCheckboxMenu>
-                        <p:selectOneMenu id="location" value="#{sampleInfoController.selectedSample.location}"  required="true"  label="location" converter="entityConverter" rendered="#{sampleInfoController.updateMode}" >  
-                            <f:selectItem itemLabel="Select One" itemValue="" />  
-                            <f:selectItems value="#{sampleInfoController.locations}" var="location" itemLabel="#{location.description}" itemValue="#{location}"/>  
-                        </p:selectOneMenu>
+                        <p:inputText id="nroTanque" value="#{sampleInfoController.selectedSample.tanque}"  maxlength="9"  required="true" label="nroTanque" /> 
+                        
 
                         <h:outputLabel for="date" value="Date: *" />  
                         <p:calendar id="date" value="#{sampleInfoController.selectedSample.inputDate}" label="date" required="true" />
+                       
 
                         <f:facet name="footer">  
                             <h:panelGroup layout="block" style="text-align:right;">
-                                <p:commandButton  title="Add" value="Save" actionListener="#{sampleInfoController.saveSample}" update=":formDialog:updatePanel :formPrincipal:tblSamples :formPrincipal:tblSamplesDetail" process="@this"/> 
+                                <p:commandButton  title="Add" value="Save" actionListener="#{sampleInfoController.saveSample}" update="growl updatePanel tblSamples tblSamplesDetail" process="@this,updatePanel"/> 
                             </h:panelGroup>
                         </f:facet> 
                     </h:panelGrid> 
+                    <pe:keyFilter for="lote nroTanque" mask="num"/> 
+                </p:panel>
 
-                </h:form> 
             </p:dialog>
-            <p:dialog  header="Delete Sample" widgetVar="varDeleteSample" resizable="false" modal="true">
-                <h:form> 
-                    <h:panelGrid >
-                        <h:outputLabel  value="Desea eleminiar el registro Seleccionado?" />  
-                        <f:facet name="footer" >  
-                            <h:panelGroup layout="block" style="text-align:right;">
-                                <p:commandButton  value="Ok" actionListener="#{sampleInfoController.deleteSample()}" update=":formPrincipal:tblSamples :formPrincipal:tblSamplesDetail"/>
-                                <p:commandButton  value="Cancel" onstart="varDeleteLocation.hide()"/> 
-                            </h:panelGroup>
-                        </f:facet>     
-                    </h:panelGrid> 
-                </h:form> 
+
+            <p:dialog  header="Delete Sample" widgetVar="dialogDeleteSample"  showEffect="slide" modal="true" resizable="false" >
+
+                <h:panelGrid >
+                    <h:outputLabel  value="Are you sure?" />  
+                    <f:facet name="footer" >  
+                        <h:panelGroup layout="block" style="text-align:right;">
+                            <p:commandButton  value="Yes" actionListener="#{sampleInfoController.deleteSample()}" update="tblSamples tblSamplesDetail" process="@this"/>
+                            <p:commandButton  value="No" onstart="PF('dialogDeleteSample').hide()" process="@this"/> 
+                        </h:panelGroup>
+                    </f:facet>     
+                </h:panelGrid> 
+
             </p:dialog>
-            
-            <p:dialog  header="Delete Sample Detail" widgetVar="varDeleteSampleDetail" resizable="false" modal="true">
-                <h:form> 
-                    <h:panelGrid>
-                        <h:outputLabel  value="Desea eleminiar el registro Seleccionado?" />  
-                        <f:facet name="footer" >  
-                            <h:panelGroup layout="block" style="text-align:right;">
-                                <p:commandButton  value="Ok" actionListener="#{sampleInfoController.deleteSampleDetail()}" update=":formPrincipal:tblSamplesDetail"/>
-                                <p:commandButton  value="Cancel" onstart="varDeleteLocation.hide()"/> 
-                            </h:panelGroup>
-                        </f:facet>     
-                    </h:panelGrid> 
-                </h:form> 
+
+            <p:dialog  header="Delete Samples Detail" widgetVar="dialogDeleteSampleDetail" showEffect="slide" modal="true" resizable="false">
+
+                <h:panelGrid>
+                    <h:outputLabel  value="Are you sure?" />  
+                    <f:facet name="footer" >  
+                        <h:panelGroup layout="block" style="text-align:right;">
+                            <p:commandButton  value="Yes" actionListener="#{sampleInfoController.deleteSampleDetail()}" update="tblSamplesDetail" process="@this"/>
+                            <p:commandButton  value="No" onstart="PF('dialogDeleteSampleDetail').hide()" process="@this" /> 
+                        </h:panelGroup>
+                    </f:facet>     
+                </h:panelGrid> 
+
             </p:dialog>
-            
-            <p:dialog  header="Add Sample Data" widgetVar="varAddSampleDetail" modal="true" resizable="false" >
-                <h:outputScript library="scripts" name="jquery.meio.mask.min.js"/>
-                <h:form id="formDialogData"> 
-                    <h:panelGrid id="updatePanelData" columns="2">
 
-                        <h:outputLabel for="type" value="Type: *" />  
-                        <p:selectOneMenu id="type" value="#{sampleInfoController.selectedSampleData.type}"  required="true"  label="type" converter="entityConverter">  
-                            <f:selectItem itemLabel="Select One" itemValue="" />  
-                            <f:selectItems value="#{sampleInfoController.sampleTypes}" var="type" itemLabel="#{type.description}" itemValue="#{type}"/>  
-                        </p:selectOneMenu>
+            <p:dialog  header="Add Sample Data" widgetVar="dialogAddSampleDetail" showEffect="slide" modal="true" resizable="false"  >
+                <h:panelGrid id="updatePanelData" columns="2">
 
-                        <h:outputLabel for="value" value="Value: *" />  
-                        <p:inputText id="value" value="#{sampleInfoController.selectedSampleData.valueData}" required="true" label="value" styleClass="{mask:'9', type:'repeat'}" /> 
+                    <h:outputLabel for="type" value="Type: *" />  
+                    <p:selectOneMenu id="type" value="#{sampleInfoController.selectedSampleData.type}"  required="true"  label="type" converter="entityConverter">  
+                        <f:selectItem itemLabel="Select One" itemValue="" />  
+                        <f:selectItems value="#{sampleInfoController.sampleTypes}" var="type" itemLabel="#{type.description}" itemValue="#{type}"/>  
+                    </p:selectOneMenu>
 
-                        <f:facet name="footer">  
-                            <h:panelGroup layout="block" style="text-align:right;">
-                                <p:commandButton  title="Add" value="Save" actionListener="#{sampleInfoController.saveSampleData}" update=":formDialogData:updatePanelData  :formPrincipal:tblSamplesDetail"/> 
-                            </h:panelGroup>
-                        </f:facet> 
-                    </h:panelGrid> 
+                    <h:outputLabel for="value" value="Values: *" />  
+                    <p:inputText id="value" value="#{sampleInfoController.selectedSampleData.valueData}" required="true" label="value" maxlength="9"/> 
 
-                </h:form> 
+                    <f:facet name="footer">  
+                        <h:panelGroup layout="block" style="text-align:right;">
+                            <p:commandButton  title="Add" value="Save" actionListener="#{sampleInfoController.saveSampleData}" update="updatePanelData  tblSamplesDetail" process="updatePanelData"/> 
+                        </h:panelGroup>
+                    </f:facet> 
+                </h:panelGrid>
+                <pe:keyFilter for="value" mask="num"/>
+
             </p:dialog>
 
         </ui:define>

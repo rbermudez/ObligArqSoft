@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.UniqueConstraint;
@@ -43,8 +44,8 @@ public class Sample extends EntityInterface implements Serializable {
     private String silo;
     @NotNull
     private long tanque;
-    //@OneToMany
-    //private List<UsuarioBackend> producers;
+    @OneToOne
+    private UsuarioBackend producers;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<SampleData> details;
 
@@ -71,15 +72,6 @@ public class Sample extends EntityInterface implements Serializable {
     public void setLote(long lote) {
         this.lote = lote;
     }
-
-    /*public List<UsuarioBackend> getProducers() {
-        return producers;
-    }
-
-    public void setProducers(List<UsuarioBackend> producers) {
-        this.producers = producers;
-    }*/
-
     
     public List<SampleData> getDetails() {
         if (details==null){
@@ -114,34 +106,32 @@ public class Sample extends EntityInterface implements Serializable {
 
     @Override
     public String toString() {
-        return "com.somehow.entities.Sample[ id=" + id + " ]";
+        return "Sample[ id=" + id + " ]";
     }
 
-    /**
-     * @return the tanque
-     */
     public long getTanque() {
         return tanque;
     }
 
-    /**
-     * @param tanque the tanque to set
-     */
     public void setTanque(long tanque) {
         this.tanque = tanque;
     }
-    /**
-     * @return the silo
-     */
+
     public String getSilo() {
         return silo;
     }
 
-    /**
-     * @param silo the silo to set
-     */
     public void setSilo(String silo) {
         this.silo = silo;
     }
+
+    public UsuarioBackend getProducers() {
+        return producers;
+    }
+
+    public void setProducers(UsuarioBackend producers) {
+        this.producers = producers;
+    }
+    
     
 }

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/templates/mainTemplate.xhtml">
+        <ui:define name="content" >
+            <p:panel id="panel" header="System Config Types">
+                <p:dataTable id="tblTypes"  var="type" value="#{systemConfigController.types}" paginator="true" rows="10" rowKey="#{type.id}" 
+                             selection="#{systemConfigController.selectedType}" selectionMode="single" paginatorPosition="bottom" emptyMessage="No data found"  
+                             scrollable="true" scrollHeight="251"  style="width: 100%">
+                    <p:ajax event="rowSelect" update="tblTypes" global="false"/>    
+                    <f:facet name="header">
+                        <h:outputText value="Sample Types" />
+                    </f:facet>
+
+                    <p:column sortBy="#{type.id}" headerText="id">
+                        <h:outputText value="#{type.id}"/>
+                    </p:column>
+
+                    <p:column  sortBy="#{type.description}" headerText="Description" >
+                        <h:outputText value="#{type.description}"/>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <h:panelGroup layout="block" style="text-align:left;">
+                            <p:commandButton   icon="ui-icon-plus" title="Add" oncomplete="PF('dialogAddType').show()" update="panelAddType" actionListener="#{systemConfigController.initType()}" process="@this"/> 
+                            <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="PF('dialogAddType').show()"  update="panelAddType" actionListener="#{systemConfigController.setUpdateMode()}" disabled="#{empty systemConfigController.selectedType}" process="@this"/> 
+                            <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="PF('dialogDeleteType').show()" disabled="#{empty systemConfigController.selectedType}" process="@this"/> 
+                        </h:panelGroup>
+                    </f:facet>  
+                </p:dataTable>
+            </p:panel> 
+
+            <p:dialog id="dialogType" header="Add Types" widgetVar="dialogAddType" showEffect="slide" modal="true" resizable="false">
+                <p:panelGrid id="panelAddType" columns="2" >
+                    <h:panelGrid columns="2" >
+                        <h:outputLabel for="description" value="Description: *" />  
+                        <p:inputText id="description" value="#{systemConfigController.description}" label="Description" required="true" />
+                        <f:facet name="footer" >  
+                            <h:panelGroup layout="block" style="text-align:right;">
+                                <p:commandButton  title="Add" value="Save" actionListener="#{systemConfigController.saveType}" update="panelAddType tblTypes"/> 
+                            </h:panelGroup>
+                        </f:facet>     
+                    </h:panelGrid> 
+                </p:panelGrid>
+            </p:dialog>
+            
+            <p:dialog id="dialogDeleteTypes" header="Delete Types" widgetVar="dialogDeleteType" showEffect="slide" modal="true" resizable="false">
+                <h:panelGrid >
+                    <h:outputLabel  value="Are you sure?" />  
+                    <f:facet name="footer" >  
+                        <h:panelGroup layout="block" style="text-align:left;">
+                            <p:commandButton  value="Yes" actionListener="#{systemConfigController.deleteType()}" update="tblTypes"/>
+                            <p:commandButton  value="No" onstart="PF('dialogDeleteType').hide()" process="@this"/> 
+                        </h:panelGroup>
+                    </f:facet>     
+                </h:panelGrid> 
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>

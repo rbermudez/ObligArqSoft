@@ -9,6 +9,7 @@ public enum EnumRole {
     ADMIN,
     LABORATORIST,
     PRODUCERS,
-    MANAGERS
+    MANAGERS,
+    SPECIALIST
     
 }

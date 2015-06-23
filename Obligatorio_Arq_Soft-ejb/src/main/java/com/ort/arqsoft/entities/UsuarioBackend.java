@@ -15,7 +15,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-//@NamedQueries({ @NamedQuery(name = "findProducers", query = "SELECT a FROM UsuarioBackend a WHERE a.roles.nombreRol = :role")})
+@NamedQueries({ @NamedQuery(name = "findProducers", query = "SELECT a FROM UsuarioBackend a WHERE  :role MEMBER OF a.roles"),
+                @NamedQuery(name = "findByEmail", query = "SELECT a FROM UsuarioBackend a WHERE  a.userName = :mail")})
 public class UsuarioBackend extends EntityInterface implements Serializable{
     
     private static final long serialVersionUID = 1L;
@@ -30,6 +31,9 @@ public class UsuarioBackend extends EntityInterface implements Serializable{
     @OneToMany
     private List<RolUsuario> roles;
 
+    public UsuarioBackend(){
+    }
+    
     public String getUserName() {
         return userName;
     }

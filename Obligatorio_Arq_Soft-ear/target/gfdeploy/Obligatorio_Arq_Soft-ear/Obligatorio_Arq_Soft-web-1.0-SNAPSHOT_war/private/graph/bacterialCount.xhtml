@@ -33,17 +33,18 @@
             <style type="text/css">
                 .ui-picklist-source, .ui-picklist-target{height: 90px !important;}
                 .ui_milkqa_fieldset{height:100%;width:0px; vertical-align:text-top;}
+                .ui_milkqa_with100{height:100%;width:100%; vertical-align:text-top;}
                 .ui-scrollpanel-content{left:10px;}
                 .ui-scrollpanel-vbar{height: 300px !important;}
                 .ui-fieldset-toggleable{height: 400px;}
             </style>
 
-            <h:form id="formPrincipal" prependId="false">
+            
                 <p:panel header="Biweekly evolution"> 
-                    <h:panelGrid columns="2" style="width: 100%;" columnClasses="ui_milkqa_fieldset">
+                    <h:panelGrid columns="2" style="width: 100%;" columnClasses="ui_milkqa_fieldset,ui_milkqa_with100">
                         <h:column class="ui_milkqa_fieldset">
-                            <p:fieldset legend="" style="" toggleable="true" toggleSpeed="600" >
-                                <p:ajax event="toggle"  listener="#{evolutionBiweeklyController.createCategoryModel}"  update=":formPrincipal:graph" onstart="hide('#graph')" oncomplete="show('#graph')"/> 
+                            <p:fieldset legend=""  toggleable="true" toggleSpeed="600" >
+                                <p:ajax event="toggle"  listener="#{evolutionBiweeklyController.createCategoryModel}"  update="graph" onstart="hide('#graph')" oncomplete="show('#graph')"/> 
                                 <p:scrollPanel style="height:300px;width:500px;" > 
                                     <p:spacer height="1000" width="10" />
 
@@ -68,8 +69,8 @@
                                         </h:column>
                                         <p:spacer height="20" width="1" />
                                     </h:panelGrid>
-                                    <h:outputLabel value="Locations:"/> 
-                                    <p:pickList id="pickListLocations" value="#{evolutionBiweeklyController.locations}" var="location" itemLabel="#{location.description}" itemValue="#{location}" converter="entityConverter" /> 
+                                    <h:outputLabel value="Producers:"/> 
+                                    <p:pickList id="pickListLocations" value="#{evolutionBiweeklyController.producers}" var="producer" itemLabel="#{producer.userName}" itemValue="#{producer}" converter="entityConverter" /> 
                                     <h:panelGroup layout="block" style="text-align:right;">
                                         <p:commandButton value="f(x)"  oncomplete="varAddFormuleLocation.show()" /> 
                                     </h:panelGroup>
@@ -81,20 +82,19 @@
                                 </p:scrollPanel>
                                 <p:spacer width="10" height="10" />
                                 <h:panelGroup layout="block" style="text-align:right;">
-                                    <p:commandButton value="Generate" actionListener="#{evolutionBiweeklyController.createCategoryModel}"  update=":formPrincipal:graph" /> 
+                                    <p:commandButton value="Generate" actionListener="#{evolutionBiweeklyController.createCategoryModel}"  update="graph" /> 
                                 </h:panelGroup>
                             </p:fieldset> 
                         </h:column>
                         <h:column>
-<!--                            <p:lineChart id="graph" value="#{evolutionBiweeklyController.categoryModel}" legendPosition="e"  
-                            title="Bacterial Count" minY="0" maxY="200" style="height:300px;margin-top:20px"/>  -->
+                            <p:chart id="graph" model="#{evolutionBiweeklyController.categoryModel}" type="bar"/>  -->
                         </h:column>
                     </h:panelGrid>
                 </p:panel>
-            </h:form>
+          
 
             <p:dialog header="Function Location" widgetVar="varAddFormuleLocation" modal="true" resizable="false" width="400" >
-                <h:form>
+              
                     <h:panelGrid columns="2" style="width: 100%;">
                         <h:outputLabel value="Formule:"  />
                         <p:selectOneMenu  value="#{evolutionBiweeklyController.functionLocation}"  converter="entityConverter">  
@@ -105,11 +105,11 @@
                     <h:panelGroup layout="block" style="text-align:right;">
                         <p:commandButton value="Apply" oncomplete="varAddFormuleLocation.hide()"/> 
                     </h:panelGroup>
-                </h:form>
+               
             </p:dialog>
             
             <p:dialog header="Function Sample Type" widgetVar="varAddFormuleSampleType" modal="true" resizable="false" width="400" >
-                <h:form>
+              
                     <h:panelGrid columns="2" style="width: 100%;">
                         <h:outputLabel value="Formule:"  />
                         <p:selectOneMenu  value="#{evolutionBiweeklyController.functionSampleType}" converter="entityConverter">  
@@ -120,14 +120,14 @@
                     <h:panelGroup layout="block" style="text-align:right;">
                         <p:commandButton value="Apply"  oncomplete="varAddFormuleSampleType.hide()"/> 
                     </h:panelGroup>
-                </h:form>
+                
             </p:dialog>
             
-            <h:form>
+         
                 <p:remoteCommand name="lazyLoadLocation"  actionListener="#{evolutionBiweeklyController.setSelectedPickedLocation}" process="@this"/>
                 <p:remoteCommand name="lazyLoadType"  actionListener="#{evolutionBiweeklyController.setSelectedPickedType}" />
                 <input  type="hidden" name="selectedPicked" id="selectedPicked"/>
-            </h:form>
+           
         </ui:define>
     </ui:composition>
 </html>

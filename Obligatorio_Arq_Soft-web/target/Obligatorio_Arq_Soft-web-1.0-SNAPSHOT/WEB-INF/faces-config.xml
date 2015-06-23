@@ -8,7 +8,7 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
     <application>        
         <resource-bundle>
-            <base-name>/Messages_resources</base-name>
+            <base-name>/MessagesResources</base-name>
             <var>messages_resources</var>
         </resource-bundle>
     </application>

@@ -5,9 +5,15 @@
  */
 package com.ort.arqsoft.controllers;
 
+import com.ort.arqsoft.entities.Alert;
+import com.ort.arqsoft.entities.utils.JPAServiceLocal;
+import com.ort.arqsoft.utils.JsfUtil;
 import java.io.Serializable;
-import java.util.logging.Level;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -15,28 +21,82 @@ import javax.faces.bean.ViewScoped;
  *
  * @author HP
  */
-@ManagedBean
+@ManagedBean(name = "alertController")
 @ViewScoped
-public class AlertController implements Serializable{
-    
+public class AlertController implements Serializable {
+
     private Logger LOG = Logger.getLogger(AlertController.class.getName());
     private String console;
+    private List<Alert> alerts;
+    private String emailText;
+    private Alert selectedAlert;
+    @EJB
+    private JPAServiceLocal jpaService;
 
-    /**
-     * @return the console
-     */
+    @PostConstruct
+    public void init() {
+        loadTables();
+    }
+
+    public void initAlert() {
+        selectedAlert = new Alert();
+    }
+
+    public void saveAlert() {
+        try {
+            selectedAlert.setEmails(Arrays.asList(emailText.split(",")));
+            jpaService.create(selectedAlert);
+            JsfUtil.addSuccessMessage("Sample was created");
+            loadTables();
+        } catch (Exception ex) {
+            JsfUtil.addErrorMessage("Sample already exist");
+        }
+    }
+
     public String getConsole() {
         return console;
     }
 
-    /**
-     * @param console the console to set
-     */
     public void setConsole(String console) {
         this.console = console;
     }
-    
-    public void loadTables(){
-        LOG.log(Level.SEVERE, "ddd");
+
+    public void loadTables() {
+        alerts = jpaService.findAll(Alert.class);
     }
+
+    public List<Alert> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<Alert> alerts) {
+        this.alerts = alerts;
+    }
+
+    public Alert getSelectedAlert() {
+        return selectedAlert;
+    }
+
+    public void setSelectedAlert(Alert selectedAlert) {
+        this.selectedAlert = selectedAlert;
+    }
+
+    public String getEmailText() {
+        StringBuilder sb = new StringBuilder();
+        if (selectedAlert != null && selectedAlert.getEmails() != null) {
+            for (String email : selectedAlert.getEmails()) {
+                sb.append(email);
+                sb.append(",");
+
+            }
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+
+    }
+
+    public void setEmailText(String emailText) {
+        this.emailText = emailText;
+    }
+
 }

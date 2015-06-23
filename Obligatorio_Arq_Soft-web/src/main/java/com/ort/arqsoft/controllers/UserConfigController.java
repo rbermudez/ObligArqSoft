@@ -3,7 +3,6 @@ package com.ort.arqsoft.controllers;
 import com.ort.arqsoft.entities.RolUsuario;
 import com.ort.arqsoft.entities.UsuarioBackend;
 import com.ort.arqsoft.entities.utils.JPAServiceLocal;
-import com.ort.arqsoft.exceptions.AlertCodes;
 import com.ort.arqsoft.security.EnumRole;
 import com.ort.arqsoft.security.PasswordHashUtil;
 import com.ort.arqsoft.ui.utils.ItemMenu;
@@ -42,6 +41,10 @@ public class UserConfigController extends AbstractController<UsuarioBackend> imp
 
     public void initUser() {
         updateMode = false;
+        selectedUser = null;
+        email ="";
+        password ="";
+        confirmPass="";
     }
 
     public void initUpdateUser() {

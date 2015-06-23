@@ -25,19 +25,19 @@
 
                     <f:facet name="footer">
                         <h:panelGroup layout="block" style="text-align:left;">
-                            <p:commandButton   icon="ui-icon-plus" title="Add"  update="tblUsers" onclick="PF('addUser').show()" action="#{userConfigController.initUser}" process="@this">
-                            </p:commandButton>
+                            <p:commandButton   icon="ui-icon-plus" title="Add"  update="tblUsers,panelAddUser" onclick="PF('addUser').show()" action="#{userConfigController.initUser}" process="@this"/>
+                            
                             <p:commandButton   icon="ui-icon-pencil" title="Edit"  update="tblUsers, panelAddUser" disabled="#{empty userConfigController.selectedUser}"  onclick="PF('addUser').show()" action="#{userConfigController.initUpdateUser}" process="@this"/> 
                             <p:commandButton   icon="ui-icon-trash" title="Delete"  disabled="#{empty userConfigController.selectedUser}" process="@this" onclick="PF('deleteUser').show()" />
                         </h:panelGroup>
                     </f:facet>  
                 </p:dataTable>
             </p:panel>  
-            <p:dialog header="Add User" showEffect="slide" widgetVar="addUser">
+            <p:dialog header="Add User" showEffect="slide" modal="true" resizable="false" widgetVar="addUser">
 
                 <p:panel id ="panelAddUser">
 
-                    <h:panelGrid  columns="3" cellpadding="5">
+                    <h:panelGrid  columns="2" cellpadding="5">
                         <h:outputLabel for="role" value="Role:" />
                         <p:selectOneMenu id="role" value="#{userConfigController.selectedRole}" converter="itemConverter" var="p" required="true" label="Role">
                             <f:selectItem itemLabel="Select One" itemValue=""  />
@@ -49,14 +49,13 @@
                                 #{p.name}  
                             </p:column>
                         </p:selectOneMenu>
-                        <p:message for="role" />
+                       
 
                         <h:outputLabel for="email" value="Email:" />
                         <p:inputText id="email" value="#{userConfigController.email}" required="true" label="Email" disabled="#{userConfigController.updateMode}" >
                             <f:validator validatorId="custom.emailValidator" />
                         </p:inputText>
-
-                        <p:message for="email" />
+                        
 
                         <h:outputLabel for="password" value="Password:" />
                         <p:password id="password" value="#{userConfigController.password}"  required="true" label="Password"  >
@@ -64,12 +63,12 @@
                             <f:validateLength minimum="6"/>
                         </p:password>
 
-                        <p:message for="password" />
+                        
 
                         <h:outputLabel for="passwordConf" value="Confirm Password:" />
                         <p:password id="passwordConf" value="#{userConfigController.confirmPass}" required="true" label="Confirm Password" />
 
-                        <p:spacer width="1" height="1"/>    
+                           
                         <f:facet name="footer">
                             <p:commandButton value="Login" update="growl, panelAddUser, tblUsers" actionListener="#{userConfigController.createUser}" />
                         </f:facet>  
@@ -80,7 +79,7 @@
 
             <p:dialog header="Delete User" showEffect="slide" widgetVar="deleteUser">
                
-                    <h:outputLabel value="Are you surer?" />
+                    <h:outputLabel value="Are you sure?" />
                     <f:facet name="footer">
                         <h:panelGroup layout="block" style="text-align:left;">
                             <p:commandButton value="Yes"   actionListener="#{userConfigController.deleteSeleced}" update="tblUsers" process="@this"/>

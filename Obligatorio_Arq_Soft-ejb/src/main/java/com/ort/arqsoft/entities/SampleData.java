@@ -23,22 +23,22 @@ import javax.persistence.UniqueConstraint;
  * @author HP
  */
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"type_id", "sample_id"}))
-@NamedQueries({ @NamedQuery(name = "findSampleData", query = "SELECT a FROM SampleData a WHERE a.Sample.id = :id")
-/*@NamedQuery(name = "getSampleBiweekly", query = "SELECT  a  "
+@NamedQueries({ @NamedQuery(name = "findSampleData", query = "SELECT a FROM SampleData a WHERE a.Sample.id = :id"),
+@NamedQuery(name = "getSampleBiweekly", query = "SELECT  a  "
                                                 + "FROM SampleData a "
                                                 + "WHERE a.id IN (SELECT f.id "
                                                         + "FROM Sample e , SampleData f "
                                                         + "WHERE f.Sample = e AND "
-                                                        + "e.location in(:locations) AND "
+                                                        + "e.producers in :producers AND "
                                                         + "e.inputDate BETWEEN :start AND :end AND "
-                                                        + "f.type in(:types) AND "
+                                                        + "f.type in :types AND "
                                                         + "e.tanque IN (SELECT MAX(c.tanque) "
                                                                     + "FROM Sample c, SampleData d "
                                                                     + "WHERE d.Sample=c AND "
                                                                     + "c.lote = e.lote AND "
-                                                                    + "c.location=e.location AND "
+                                                                    + "c.producers=e.producers AND "
                                                                     + "c.inputDate BETWEEN :start AND :end AND "
-                                                                    + "d.type=f.type)) ORDER BY a.Sample.location,a.type,a.Sample.lote ")*/ })
+                                                                    + "d.type=f.type)) ORDER BY a.Sample.producers,a.type,a.Sample.lote ") })
 @Entity
 public class SampleData extends EntityInterface implements Serializable {
 

@@ -59,10 +59,9 @@ public class JsfUtil {
         FacesContext.getCurrentInstance().addMessage("Alert", facesMsg);
     }
 
-    public static void addErrorMessage(String key) {
-        FacesMessage facesMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, key);
-        FacesContext.getCurrentInstance().addMessage(null, facesMsg);
-        FacesContext.getCurrentInstance().validationFailed(); // Invalidate JSF page if we raise an error message
+    public static void addErrorMessage(String str) {
+        FacesMessage facesMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, str, "Error:");
+        FacesContext.getCurrentInstance().addMessage("error", facesMsg);
     }
 
     public static void addSuccessMessage(String str) {
