@@ -21,8 +21,7 @@
                         <p:commandButton value="Login" action="#{login.login()}" update="loginPanel"/>  
                         <p:commandButton value="Login Gmail" action="#{login.loginOAuth()}" update="loginPanel" process="@this"/>  
                         <p:messages globalOnly="true" autoUpdate="true"/>
-                        <p:commandButton value="Create" action="#{login.createUser()}" update="loginPanel" rendered="#{login.existeUsuario()}"/> 
-                        <p:commandButton value="Login" action="#{login.login()}" update="loginPanel"/>                        
+                        <p:commandButton value="Create" action="#{login.createUser()}" update="loginPanel" rendered="#{login.existeUsuario()}"/>                    
                     </p:panel>
                 </div>
                 <div class="large-4 columns">
