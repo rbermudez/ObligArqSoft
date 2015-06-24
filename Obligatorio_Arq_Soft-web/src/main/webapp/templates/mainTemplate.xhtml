@@ -12,30 +12,31 @@
             <h:form>
                 <p:menubar>  
                     <p:submenu label="Configuration" icon="ui-icon-gear" rendered="#{securityController.admin or securityController.specialist}">
+                       
                         <p:menuitem value="Users" icon="ui-icon-person" url="/private/config/users/users.xhtml" rendered="#{securityController.admin}"/>
+                        
                         <p:menuitem value="Alerts"  icon="ui-icon ui-icon-alert" url="/private/config/alerts/alerts.xhtml" rendered="#{securityController.admin}"/>
+                        
                         <p:submenu label="System Config" icon="ui-icon ui-icon-wrench" rendered="#{securityController.admin or securityController.specialist }">
                             <p:menuitem value="Functions FX"  icon="ui-icon-gear" url="/private/config/system/systemConfigFunctions.xhtml" rendered="#{securityController.specialist}"/>
                             <p:menuitem value="Samples Types"  icon="ui-icon-gear" url="/private/config/system/systemConfigTypes.xhtml" rendered="#{securityController.admin}"/>
                         </p:submenu>
-                        
-                        
                     </p:submenu>  
+                    
                     <p:submenu label="Lab" icon="ui-icon-document" rendered="#{securityController.laboratorist}">
                         <p:menuitem value="Input Samples" icon="ui-icon-document" url="/private/lab/sampleInfo.xhtml" />                       
                     </p:submenu>
+                    
                     <p:submenu label="Graph" icon="ui-icon-signal" rendered="#{securityController.manager}">
                         <p:menuitem value="Biweekly evolution" icon="ui-icon-signal" url="/private/graph/evolutionBiweekly.xhtml" style="width: 200px;"/>  
-                        <p:menuitem value="Bacterial Count" icon="ui-icon-signal" url="/private/graph/bacterialCount.xhtml" />
-                        <p:menuitem value="Bacterial Contamination" icon="ui-icon-signal" url="/private/graph/bacterialContamination.xhtml" style="width: 200px;" />
-                        
+                        <p:menuitem value="Bacterial Count" icon="ui-icon-signal" url="/private/graph/bacterialCount.xhtml" />                        
                     </p:submenu>
+                    
                     <p:submenu label="Reports" icon="ui-icon-clipboard" rendered="#{securityController.manager}">
                         <p:menuitem value="Alerts issued" icon="ui-icon-alert" url="/private/reports/alerts.xhtml" />                       
                     </p:submenu>
+                    
                     <f:facet name="options">  
-
-                
                         <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{login.logout()}"/>  
                     </f:facet>
                 </p:menubar>

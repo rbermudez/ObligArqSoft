@@ -106,7 +106,7 @@
                         </p:selectOneMenu>
                     </h:panelGrid>
                     <h:panelGroup layout="block" style="text-align:right;">
-                        <p:commandButton value="Apply" oncomplete="PF('varAddFormulePorducer').hide()" actionListener="#{evolutionBiweeklyController.proof}"/> 
+                        <p:commandButton value="Apply" oncomplete="PF('varAddFormulePorducer').hide()" process="@this"/>  
                     </h:panelGroup>
                
             </p:dialog>
@@ -121,7 +121,7 @@
                         </p:selectOneMenu>
                     </h:panelGrid>
                     <h:panelGroup layout="block" style="text-align:right;">
-                        <p:commandButton value="Apply"  oncomplete="PF('varAddFormuleSampleType').hide()"/> 
+                        <p:commandButton value="Apply"  oncomplete="PF('varAddFormuleSampleType').hide()" process="@this"/> 
                     </h:panelGroup>
                 
             </p:dialog>

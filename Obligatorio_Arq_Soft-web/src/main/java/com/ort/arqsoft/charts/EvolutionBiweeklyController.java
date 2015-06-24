@@ -57,29 +57,28 @@ public class EvolutionBiweeklyController implements Serializable {
     private DualListModel<SampleType> sampleTypes;
     private Date start;
     private Date end;
-    private UsuarioBackend selectedPickedLocation;
+    private UsuarioBackend selectedPickedProducer;
     private SampleType selectedPickedType;
     
 
     @PostConstruct
     public void init() {
-       // List<SampleLocation> aux = jpaService.findAll(SampleLocation.class);
         RolUsuario rol = jpaService.findOneWithNamedQuery(RolUsuario.class, "findRol", QueryParameter.with("role", EnumRole.PRODUCERS.name()).parameters());
         List<UsuarioBackend> aux = jpaService.findWithNamedQuery(UsuarioBackend.class, "findProducers", QueryParameter.with("role", rol).parameters());
         int i = 0;
-        List<UsuarioBackend> sourceLocations = new ArrayList<>();
+        List<UsuarioBackend> sourceProducer = new ArrayList<>();
         for (UsuarioBackend sampleLocation : aux) {
             if (i == 3) {
                 break;
             }
             i++;
-            sourceLocations.add(sampleLocation);
+            sourceProducer.add(sampleLocation);
         }
 
-        List<UsuarioBackend> targetLocations = ListUtils.diferenceOfSecondList(sourceLocations, aux);
+        List<UsuarioBackend> targetProducer = ListUtils.diferenceOfSecondList(sourceProducer, aux);
         List<SampleType> sourceSampleTypes = jpaService.findAll(SampleType.class);
         List<SampleType> targetSampleTypes = new ArrayList<>();
-        setProducers(new DualListModel<>(sourceLocations, targetLocations));
+        setProducers(new DualListModel<>(sourceProducer, targetProducer));
         setSampleTypes(new DualListModel<>(sourceSampleTypes, targetSampleTypes));
         setEnd(new Date());
         Calendar cal = Calendar.getInstance();
@@ -94,22 +93,20 @@ public class EvolutionBiweeklyController implements Serializable {
         return categoryModel;
     }
 
-    public void setSelectedPickedLocation() {
+    public void setSelectedPickedProducer() {
         String hashValue = JsfUtil.getValueComponent("selectedPicked");
         if (hashValue.isEmpty()) {
-            JsfUtil.addAlertMessage(AlertCodes.NOT_SELECTED_VALUE, "text.locations");
+            JsfUtil.addAlertMessage("Please select a producer");
         } else {
-            selectedPickedLocation = EntityUtils.getAsObject(hashValue, UsuarioBackend.class);
+            selectedPickedProducer = EntityUtils.getAsObject(hashValue, UsuarioBackend.class);
             JsfUtil.showDialog("varAddFormule");
         }
     }
 
     public void setSelectedPickedType() {
-
-        //JsfUtil.showDialog("dlg1");
         String hashValue = JsfUtil.getValueComponent("selectedPicked");
         if (hashValue.isEmpty()) {
-            JsfUtil.addAlertMessage(AlertCodes.NOT_SELECTED_VALUE, "text.sampleTypes");
+            JsfUtil.addAlertMessage("Please select a type");
         } else {
             selectedPickedType = EntityUtils.getAsObject(hashValue, SampleType.class);
             System.out.println(selectedPickedType.getDescription());
@@ -136,9 +133,9 @@ public class EvolutionBiweeklyController implements Serializable {
         ChartSeries generic;
         categoryModel = new BarChartModel();
         if (producers.getSource().isEmpty()) {
-            JsfUtil.addAlertMessage(AlertCodes.FILTER_NOT_EMPTY, "text.locations");
+            JsfUtil.addAlertMessage("Please select a producer");
         } else if (sampleTypes.getSource().isEmpty()) {
-            JsfUtil.addAlertMessage(AlertCodes.FILTER_NOT_EMPTY, "text.sampleTypes");
+            JsfUtil.addAlertMessage("Please select a type");
         } else if (functionSampleType!=null)  {
             categoryModel = createCategoryModelWithFx();
         }else{
@@ -202,7 +199,7 @@ public class EvolutionBiweeklyController implements Serializable {
         try{
             Timestamp endTimeStamp = new Timestamp(end.getTime());
             Timestamp startTimeStamp = new Timestamp(start.getTime());
-            samples = jpaService.findWithNamedQuery(SampleData.class, "getSampleBiweekly", QueryParameter.with("start", startTimeStamp).and("end", endTimeStamp).and("types",sampleTypes.getSource()).and("locations", producers.getSource()).parameters());
+            samples = jpaService.findWithNamedQuery(SampleData.class, "getSampleBiweekly", QueryParameter.with("start", startTimeStamp).and("end", endTimeStamp).and("types",sampleTypes.getSource()).and("producers", producers.getSource()).parameters());
             if (samples.size()>0){
                 generic = new ChartSeries();
                 SampleData sampleCompare = samples.get(0);

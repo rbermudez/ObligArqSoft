@@ -34,8 +34,9 @@ public class ScriptExecutor {
     public Object executeScript(String script, String... parameters) throws ScriptException {
         int i = 1;
         for (String value : parameters) {
-            String var = "value" + i;
+            String var = "value"+i;
             engine.put(var, value);
+            i++;
         }
         engine.eval(script);
         return  engine.eval("y");

@@ -7,15 +7,19 @@ package com.ort.arqsoft.controllers;
 import com.ort.arqsoft.entities.FunctionFx;
 import com.ort.arqsoft.entities.SampleType;
 import com.ort.arqsoft.entities.utils.JPAServiceLocal;
+import com.ort.arqsoft.entities.utils.ScriptExecutor;
 import com.ort.arqsoft.utils.JsfUtil;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.persistence.PersistenceException;
+import javax.script.ScriptException;
 import org.primefaces.event.CloseEvent;
 
 /**
@@ -100,7 +104,7 @@ public class SystemConfigController implements Serializable {
     public void saveFunction() {
         try {
 
-            //ScriptExecutor.instance().executeScript(description, "value1");
+            ScriptExecutor.instance().executeScript(description, "value1");
             if (updateMode) {
                 selectedFunction.setName(name);
                 selectedFunction.setDescription(description);
@@ -117,9 +121,9 @@ public class SystemConfigController implements Serializable {
             JsfUtil.hideDialog("dialogAddFunction");
         } catch (PersistenceException ex) {
             JsfUtil.addErrorMessage(MessageFormat.format("Function {0} already exist", name));
-        } /*catch (ScriptException ex) {
-            JsfUtil.addErrorMessage(MessageFormat.format("Invalid function: {0} please verify", name));
-        }*/
+        } catch (ScriptException ex) {
+             JsfUtil.addErrorMessage(MessageFormat.format("Invalid function: {0} please verify", name));
+        }
         loadFunctions();
     }
 

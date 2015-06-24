@@ -31,7 +31,7 @@ public class Alert extends EntityInterface implements Serializable{
     @OneToOne
     private SampleType type;
     @NotNull
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dateStart;
     @NotNull
     private List<String> emails;

@@ -30,6 +30,7 @@ public class AlertController implements Serializable {
     private List<Alert> alerts;
     private String emailText;
     private Alert selectedAlert;
+    private boolean updateMode;
     @EJB
     private JPAServiceLocal jpaService;
 
@@ -39,17 +40,40 @@ public class AlertController implements Serializable {
     }
 
     public void initAlert() {
+        updateMode = false;
         selectedAlert = new Alert();
+    }
+
+    public void updateAlert() {
+        updateMode = true;
     }
 
     public void saveAlert() {
         try {
+
             selectedAlert.setEmails(Arrays.asList(emailText.split(",")));
-            jpaService.create(selectedAlert);
-            JsfUtil.addSuccessMessage("Sample was created");
+            if (updateMode) {
+                jpaService.update(selectedAlert);
+                JsfUtil.addSuccessMessage("Alert was updated");
+            } else {
+                jpaService.create(selectedAlert);
+                JsfUtil.addSuccessMessage("Alert was created");
+            }
+            JsfUtil.hideDialog("dialogAddAlert");
+
             loadTables();
         } catch (Exception ex) {
             JsfUtil.addErrorMessage("Sample already exist");
+        }
+    }
+
+    public void deleteSeleced() {
+        try {
+             jpaService.delete(selectedAlert);
+             JsfUtil.addSuccessMessage("Alert was deleted");
+             JsfUtil.hideDialog("deleteAlert");
+        } catch (Exception ex) {
+            JsfUtil.addErrorMessage("Alert have a reference cannot delete");
         }
     }
 

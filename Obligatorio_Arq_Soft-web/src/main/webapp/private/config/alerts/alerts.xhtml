@@ -4,7 +4,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="content" >
             <p:panel id="panel" header="Alerts Config">
@@ -39,8 +40,8 @@
                     <f:facet name="footer">
                         <h:panelGroup layout="block" style="text-align:left;">
                             <p:commandButton   icon="ui-icon-plus" title="Add" oncomplete="PF('dialogAddAlert').show()" update="panelAddAlert" actionListener="#{alertController.initAlert()}" process="@this"/> 
-                            <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="PF('dialogAddAlert').show()"  update="panelAddAlert" actionListener="#{systemConfigController.setUpdateMode()}" disabled="#{empty alertController.selectedAlert}" process="@this"/> 
-                            <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="PF('dialogAddAlert').show()" disabled="#{empty alertController.selectedAlert}" process="@this"/> 
+                            <p:commandButton   icon="ui-icon-pencil" title="Edit" oncomplete="PF('dialogAddAlert').show()"  update="panelAddAlert" actionListener="#{alertController.updateAlert()}" disabled="#{empty alertController.selectedAlert}" process="@this"/> 
+                            <p:commandButton   icon="ui-icon-trash" title="Delete" oncomplete="PF('deleteAlert').show()" disabled="#{empty alertController.selectedAlert}" process="@this"/> 
                         </h:panelGroup>
                     </f:facet>  
                 </p:dataTable>
@@ -56,8 +57,8 @@
                             <f:selectItems value="#{sampleInfoController.sampleTypes}" var="type" itemLabel="#{type.description}" itemValue="#{type}"/>  
                         </p:selectOneMenu>
 
-                        <h:outputLabel for="value" value="Value: *" /> 
-                        <p:inputText id="value" required="true" value="#{alertController.selectedAlert.controlValue}" label="Value"/>
+                        <h:outputLabel for="value" value="Values: *" /> 
+                        <p:inputText id="value" required="true" value="#{alertController.selectedAlert.controlValue}" label="Value" maxlength="9"  />
 
                         <h:outputLabel for="date" value="Date: *" />  
                         <p:calendar id="date" value="#{alertController.selectedAlert.dateStart}" label="Date" required="true"  pattern="dd/MM/yyyy HH:mm:ss" />
@@ -67,14 +68,28 @@
 
                         <h:outputLabel for="enabled" value="Enabled: *" />  
                         <p:selectBooleanCheckbox id="enabled" value="#{alertController.selectedAlert.enable}" label="Enabled"  required="true" />
-                        
+
                         <f:facet name="footer">  
                             <h:panelGroup layout="block" style="text-align:right;">
                                 <p:commandButton  title="Add" value="Save" actionListener="#{alertController.saveAlert}" update="growl panelAddAlert tblAlerts" process="@this,panelAddAlert"/> 
                             </h:panelGroup>
                         </f:facet> 
                     </h:panelGrid> 
+                    <pe:keyFilter for="value" mask="num"/> 
                 </p:panel>
+                
+            </p:dialog>
+
+            <p:dialog header="Delete Alert" showEffect="slide" widgetVar="deleteAlert">
+
+                <h:outputLabel value="Are you sure?" />
+                <f:facet name="footer">
+                    <h:panelGroup layout="block" style="text-align:left;">
+                        <p:commandButton value="Yes"   actionListener="#{alertController.deleteSeleced}" update="tblAlerts" process="@this"/>
+                        <p:commandButton value="No"  onclick="PF('deleteAlert').hide()" process="@this"/>
+
+                    </h:panelGroup>
+                </f:facet> 
 
             </p:dialog>
 
