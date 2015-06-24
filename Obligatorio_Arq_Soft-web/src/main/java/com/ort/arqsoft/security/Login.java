@@ -9,7 +9,6 @@ import com.ort.arqsoft.entities.UsuarioBackend;
 import com.ort.arqsoft.entities.utils.JPAServiceLocal;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -25,17 +24,9 @@ import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
-import org.apache.oltu.oauth2.client.OAuthClient;
-import org.apache.oltu.oauth2.client.URLConnectionClient;
-import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
-import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
-import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.OAuthProviderType;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
-import org.apache.oltu.oauth2.common.message.types.GrantType;
 
 
 /**
@@ -50,7 +41,7 @@ public class Login {
     static String apiKey = "67358443729-5bnspic6knooqnlr5aaeee50scelp8ud.apps.googleusercontent.com";
     static String apiSecret = "zfDGlXyv4ZnIQ4YG4veL7Lvi";
     static String callbackUrl = "http://localhost:8080/Obligatorio_Arq_Soft-web/Security";
-    private Logger LOG = Logger.getLogger(Login.class.getName());
+    private final Logger LOG = Logger.getLogger(Login.class.getName());
     private static final String HOME_URL = "private/mainPage.xhtml";
     private static final String LOGOUT_URL = "login.xhtml";
     @EJB
@@ -85,43 +76,7 @@ public class Login {
             System.out.println("Visit: " + request.getLocationUri() + "\nand grant permission");
             Faces.getExternalContext().redirect(request.getLocationUri());
 
-            System.out.println("Now enter the OAuth code you have received in redirect uri (browser 'http://localhost/?code=XXX' ");
-            String authcode;
-            try (Scanner in = new Scanner(System.in)) {
-                authcode = in.nextLine();
-            }
-
-            request = OAuthClientRequest
-                    .tokenProvider(OAuthProviderType.GOOGLE)
-                    .setGrantType(GrantType.AUTHORIZATION_CODE)
-                    .setClientId(apiKey)
-                    .setClientSecret(apiSecret)
-                    .setRedirectURI(callbackUrl)
-                    .setCode(authcode)
-                    .buildBodyMessage();
-
-            OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
-            OAuthJSONAccessTokenResponse response = oAuthClient.accessToken(request);
-
-            System.out.println("\nAccess Token: " + response.getAccessToken() + "\nExpires in: " + response.getExpiresIn());
-
-            // Use the access token to retrieve the data. 
-            OAuthClientRequest bearerClientRequest = new OAuthBearerClientRequest(PROTECTED_RESOURCE_URL)
-                    .setAccessToken(response.getAccessToken())
-                    .buildQueryMessage();
-
-            OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
-
-            if (resourceResponse.getResponseCode() == 200) {
-                System.out.println(resourceResponse.getBody());
-            } else {
-                System.err.println(
-                        "Could not access resource: "
-                        + resourceResponse.getResponseCode() + " "
-                        + resourceResponse.getBody());
-            }
-
-        } catch (OAuthSystemException | OAuthProblemException e) {
+        } catch (OAuthSystemException e) {
            LOG.log(Level.SEVERE, "OAUTH Error", e);
         }
     }
