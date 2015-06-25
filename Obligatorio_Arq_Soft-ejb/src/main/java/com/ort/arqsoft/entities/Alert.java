@@ -16,12 +16,15 @@ import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author HP
  */
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"type_id"}))
 public class Alert extends EntityInterface implements Serializable{
      private static final long serialVersionUID = 1L;
     

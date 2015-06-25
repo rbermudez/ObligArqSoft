@@ -151,12 +151,14 @@ public class EvolutionBiweeklyController implements Serializable {
                 generic.setLabel(sampleCompare.getSample().getProducers().getUserName());
                 for (SampleData sampleData : samples) {
                     if (sampleCompare.getSample().getProducers().equals(sampleData.getSample().getProducers())){
-                        generic.set(sampleData.getType().getDescription(), new Double(sampleData.getValueData()));
+                        Double data =new Double(sampleData.getValueData());
+                        generic.set(sampleData.getType().getDescription(), data);
                     }else{
                         categoryModel.addSeries(generic);
                         generic = new ChartSeries();
                         generic.setLabel(sampleData.getSample().getProducers().getUserName());
-                        generic.set(sampleData.getType().getDescription(), new Double(sampleData.getValueData()));
+                        Double data =new Double(sampleData.getValueData());
+                        generic.set(sampleData.getType().getDescription(), data);
                         sampleCompare=sampleData;
                         
                     }
