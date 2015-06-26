@@ -7,6 +7,7 @@ package com.ort.arqsoft.controllers;
 
 import com.ort.arqsoft.entities.Alert;
 import com.ort.arqsoft.entities.utils.JPAServiceLocal;
+import com.ort.arqsoft.jms.ActionTimer;
 import com.ort.arqsoft.utils.JsfUtil;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -55,10 +56,13 @@ public class AlertController implements Serializable {
             if (updateMode) {
                 jpaService.update(selectedAlert);
                 JsfUtil.addSuccessMessage("Alert was updated");
+                
             } else {
                 jpaService.create(selectedAlert);
                 JsfUtil.addSuccessMessage("Alert was created");
             }
+            ActionTimer timer = new ActionTimer(selectedAlert);
+            timer.scheduleAlarm();
             JsfUtil.hideDialog("dialogAddAlert");
 
             loadTables();

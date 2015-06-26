@@ -146,9 +146,9 @@ public class BacterialContaminationController implements Serializable {
     private MeterGaugeChartModel initMeterGaugeModel(double value, final int maxVal) {
         List<Number> intervals = new ArrayList<Number>() {
             {
-                add(maxVal / 4);
-                add(maxVal / 2);
+                add(maxVal /2);
                 add(maxVal);
+                add(100);
             }
         };
         return new MeterGaugeChartModel(value, intervals);

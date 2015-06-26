@@ -30,6 +30,9 @@ import javax.persistence.UniqueConstraint;
                                                         + "WHERE a.Sample.inputDate > :date and "
                                                         + "a.Sample.silo = :silo and a.type = :type and "
                                                         + "a.Sample.tanque = :tanque"),
+    @NamedQuery(name = "getAlertContamination", query = "SELECT a FROM SampleData a "
+                                                        + "WHERE a.Sample.inputDate > :date and "
+                                                        + "a.type = :type ORDER BY a.Sample.silo, a.Sample.tanque"),
     
     @NamedQuery(name = "getSampleBiweekly", query = "SELECT  a  "
                                                 + "FROM SampleData a "

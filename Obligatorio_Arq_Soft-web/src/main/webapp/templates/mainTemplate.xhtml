@@ -32,9 +32,7 @@
                         <p:menuitem value="Bacterial contamination" icon="ui-icon-signal" url="/private/graph/bacterialContamination.xhtml" style="width: 200px;" />                        
                     </p:submenu>
                     
-                    <p:submenu label="Reports" icon="ui-icon-clipboard" rendered="#{securityController.manager}">
-                        <p:menuitem value="Alerts issued" icon="ui-icon-alert" url="/private/reports/alerts.xhtml" />                       
-                    </p:submenu>
+                    
                     
                     <f:facet name="options">  
                         <p:commandButton value="Logout" icon="ui-icon-extlink" action="#{login.logout()}"/>  
