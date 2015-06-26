@@ -9,7 +9,7 @@
 
     <groupId>com.ort.arqsoft</groupId>
     <artifactId>Obligatorio_Arq_Soft-ear</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>ear</packaging>
 
     <name>Obligatorio_Arq_Soft-ear</name>
