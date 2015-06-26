@@ -83,10 +83,10 @@ public class OAuthServlet extends HttpServlet {
                 Account account = mapper.readValue(resourceResponse.getBody(), Account.class);
                 UsuarioBackend user = jpaService.find(UsuarioBackend.class, account.getEmail());
                 if (user == null) {
-                    RolUsuario rol = jpaService.find(RolUsuario.class, EnumRole.PRODUCERS.name());
+                    RolUsuario rol = jpaService.find(RolUsuario.class, EnumRole.MANAGERS.name());
                     if (rol == null) {
                         rol = new RolUsuario();
-                        rol.setNombreRol(EnumRole.PRODUCERS.name());
+                        rol.setNombreRol(EnumRole.MANAGERS.name());
                         rol.setDescripcion("Rol administrador autocreado");
                         jpaService.create(rol);
                     }

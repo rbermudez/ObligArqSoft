@@ -2,12 +2,48 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="content" >
-            <p:panel header="Bacterial contamination" > 
-                <p:chart type="metergauge" model="#{bacterialContaminationController.meterGaugeModel2}" style="width:35 0px;height:200px" />
+            <p:panel id="panel" header="Bacterial contamination" > 
+                <h:panelGrid  columns="4">
+
+                    <h:outputLabel for="silo" value="Silo:" />  
+                    <p:selectOneMenu id="silo" value="#{bacterialContaminationController.selectedSilo}" style="width:125px">
+                        <p:ajax event="change" update="updatePanel" listener="#{bacterialContaminationController.loadInfo}" />
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItem itemLabel="A" itemValue="A" />
+                        <f:selectItem itemLabel="B" itemValue="B" />
+                        <f:selectItem itemLabel="C" itemValue="C" />
+                        <f:selectItem itemLabel="D" itemValue="D" />
+                        <f:selectItem itemLabel="E" itemValue="E" />
+                    </p:selectOneMenu>
+                    <h:outputLabel for="type" value="Type: *" />  
+                    <p:selectOneMenu id="type" value="#{bacterialContaminationController.selectedType}"  required="true"  label="type" converter="entityConverter">  
+                        <p:ajax event="change" update="updatePanel" listener="#{bacterialContaminationController.loadInfo}" />
+                        <f:selectItem itemLabel="Select One" itemValue="" />  
+                        <f:selectItems value="#{bacterialContaminationController.sampleTypes}" var="type" itemLabel="#{type.description}" itemValue="#{type}"/>  
+                    </p:selectOneMenu>
+
+                </h:panelGrid>
+                <h:panelGrid id="updatePanel" style="width: 100%;">
+                    <ui:repeat value="#{bacterialContaminationController.meterListInfo}" var="p" rendered="#{bacterialContaminationController.rederMeters}">
+                        <p:panel header="Tanque #{p.tanque}" style="float:left; width: 33%;" > 
+                            <p:chart type="metergauge" model="#{p.model}" style="width:35 0px;height:200px" />
+                            <f:facet name="footer">  
+                                <h:panelGroup layout="block" style="text-align:right;">
+                                    <p:commandButton  title="Clean" value="Clean" actionListener="#{bacterialContaminationController.clean}" update="panel" process="@this"> 
+                                        <f:attribute name="tanque" value="#{p.tanque}" />
+                                    </p:commandButton>
+                                </h:panelGroup>
+                            </f:facet> 
+                        </p:panel> 
+                    </ui:repeat>
+                </h:panelGrid>
             </p:panel>
+
         </ui:define>
     </ui:composition>
 </html>

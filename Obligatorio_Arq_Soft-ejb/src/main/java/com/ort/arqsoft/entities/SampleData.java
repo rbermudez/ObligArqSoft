@@ -23,8 +23,15 @@ import javax.persistence.UniqueConstraint;
  * @author HP
  */
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"type_id", "sample_id"}))
-@NamedQueries({ @NamedQuery(name = "findSampleData", query = "SELECT a FROM SampleData a WHERE a.Sample.id = :id"),
-@NamedQuery(name = "getSampleBiweekly", query = "SELECT  a  "
+@NamedQueries({     
+    @NamedQuery(name = "findSampleData", query = "SELECT a FROM SampleData a WHERE a.Sample.id = :id"),
+    
+    @NamedQuery(name = "getSampleContamination", query = "SELECT a FROM SampleData a "
+                                                        + "WHERE a.Sample.inputDate > :date and "
+                                                        + "a.Sample.silo = :silo and a.type = :type and "
+                                                        + "a.Sample.tanque = :tanque"),
+    
+    @NamedQuery(name = "getSampleBiweekly", query = "SELECT  a  "
                                                 + "FROM SampleData a "
                                                 + "WHERE a.id IN (SELECT f.id "
                                                         + "FROM Sample e , SampleData f "
@@ -39,6 +46,8 @@ import javax.persistence.UniqueConstraint;
                                                                     + "c.producers=e.producers AND "
                                                                     + "c.inputDate BETWEEN :start AND :end AND "
                                                                     + "d.type=f.type)) ORDER BY a.Sample.producers,a.type,a.Sample.lote ") })
+
+
 @Entity
 public class SampleData extends EntityInterface implements Serializable {
 

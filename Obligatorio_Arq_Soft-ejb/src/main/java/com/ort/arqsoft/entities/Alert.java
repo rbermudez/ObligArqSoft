@@ -16,6 +16,8 @@ import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -25,6 +27,8 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"type_id"}))
+@NamedQueries({     
+    @NamedQuery(name = "getAlert", query = "SELECT a FROM Alert a WHERE a.type= :type")})
 public class Alert extends EntityInterface implements Serializable{
      private static final long serialVersionUID = 1L;
     

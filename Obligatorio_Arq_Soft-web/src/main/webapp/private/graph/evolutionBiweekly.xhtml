@@ -73,12 +73,12 @@
                                     <h:outputLabel value="Producers:"/> 
                                     <p:pickList id="pickListProducers" value="#{evolutionBiweeklyController.producers}" var="producer" itemLabel="#{producer.userName}" itemValue="#{producer}" converter="entityConverter" /> 
                                     <h:panelGroup layout="block" style="text-align:right;">
-                                        <p:commandButton value="f(x)"  oncomplete="PF('varAddFormulePorducer').show()" /> 
+                                        <p:commandButton value="f(x)"  oncomplete="PF('varAddFormulePorducer').show()" process="@this"/> 
                                     </h:panelGroup>
                                     <h:outputLabel value="Sample Types:" />
                                     <p:pickList id="pickListTypes"  value="#{evolutionBiweeklyController.sampleTypes}" var="type" itemLabel="#{type.description}" itemValue="#{type}" converter="entityConverter"  />
                                     <h:panelGroup layout="block" style="text-align:right;">
-                                        <p:commandButton value="f(x)"  oncomplete="PF('varAddFormuleSampleType').show()" /> 
+                                        <p:commandButton value="f(x)"  oncomplete="PF('varAddFormuleSampleType').show()"  process="@this"/> 
                                     </h:panelGroup>
                                 </p:scrollPanel>
                                 <p:spacer width="10" height="10" />
@@ -90,7 +90,7 @@
                         <h:column>
                             <p:chart id="graph" model="#{evolutionBiweeklyController.categoryModel}"  type="bar" style="width: 100%"/>
                             <h:panelGroup layout="block" style="text-align:right;">
-                                <p:commandButton icon="ui-icon-info"  oncomplete="PF('varChartData').show()" update="tblChart"/> 
+                                <p:commandButton icon="ui-icon-info"  oncomplete="PF('varChartData').show()" update="tblChart" process="@this"/> 
                             </h:panelGroup>
                         </h:column>
                     </h:panelGrid>
